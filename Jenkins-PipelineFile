@@ -7,7 +7,7 @@ pipeline
 		{
 			steps
 			{
-				git 'https://github.com/RevMangena/Purdue-IG-Project.git'
+				git credentialsId: 'Git_Credentials', url: 'https://github.com/RevMangena/Purdue-IG-Project.git' 
 			}
 		}
 		
