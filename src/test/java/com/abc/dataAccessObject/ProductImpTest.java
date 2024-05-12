@@ -7,7 +7,7 @@ import org.junit.Test;
 import com.abc.RetailModule;
 
 public class ProductImpTest {
-
+	
 	@Test
 	public void createUserShouldWorkSuccessfully() {
 		RetailAccessObject obj = new RetailDataImp();
