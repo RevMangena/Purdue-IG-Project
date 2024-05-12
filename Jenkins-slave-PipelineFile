@@ -1,0 +1,31 @@
+pipeline
+{
+	agent  {label 'jenkins-slave'}
+	stages
+	{
+		
+		stage('1.Compile')
+		{
+			steps
+			{
+				sh 'mvn compile'
+			}
+		}
+
+		stage('2.Test')
+		{
+			steps
+			{
+				sh 'mvn test'
+			}
+		}
+
+		stage('3.Package')
+		{
+			steps
+			{
+				sh 'mvn package'
+			}
+		}
+   }
+}
