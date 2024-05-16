@@ -1,0 +1,12 @@
+cd /home/ubuntu
+rm -rf warfile
+mkdir warfile
+cp /tmp/jenkinsdir/workspace/jenkins-slave-1/target/ABCtechnologies-1.0.war .
+touch Dockerfile
+cat <<EOT>> Dockerfile
+FROM tomcat:9.0.73-jdk8-corretto-al2
+ADD . /usr/local/tomcat/webapps
+EOT
+docker build -t my-tomcat-app .
+docker tag my-tomcat-app revmangena/my-tomcat-app
+docker push revmangena/my-tomcat-app
