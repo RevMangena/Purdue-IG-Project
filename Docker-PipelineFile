@@ -27,7 +27,7 @@ pipeline
                 sh 'mvn package'
             }
         }
-    stage('4.Create Dockerfile')
+    stage('Create Dockerfile')
         {
             steps
             {
@@ -45,7 +45,7 @@ pipeline
                 }
           }
       }
-    stage ('5.Build Docker Image')
+    stage ('Build Docker Image')
       {
         steps
       {
@@ -55,7 +55,7 @@ pipeline
 
           }
 
-        stage('6.Push Docker Image')
+        stage('Push Docker Image')
         { 
             steps
             {   
