@@ -24,20 +24,13 @@ pipeline {
             }
         }
 
-        stage('Create Dockerfile') {
+       stage('Create Dockerfile') {
             steps {
                 script {
-                    // Prepare the Docker build context
-                    sh '''
-                        cd /home/ubuntu
-                        rm -rf warfile
-                        mkdir warfile
-                        cp /tmp/jenkinsdir/workspace/DockerPipeline/target/ABCtechnologies-1.0.war warfile/
-                        cd warfile
-                        cat <<EOT > Dockerfile
+                    // Create Dockerfile in the workspace directory
+                    writeFile file: 'Dockerfile', text: '''
                         FROM tomcat:9.0.73-jdk8-corretto-al2
-                        ADD . /usr/local/tomcat/webapps
-                        EOT
+                        COPY target/ABCtechnologies-1.0.war /usr/local/tomcat/webapps/
                     '''
                 }
             }
