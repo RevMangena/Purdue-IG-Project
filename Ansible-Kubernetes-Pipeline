@@ -33,7 +33,7 @@ pipeline {
                         rm -rf /home/ubuntu/warfile
                         mkdir -p /home/ubuntu/warfile
                         cd /home/ubuntu/warfile || exit 1  // Ensure the directory change is successful
-                        cp /tmp/jenkinsdir/workspace/AnsibleKubernetes/target/ABCtechnologies-1.0.war . /home/ubuntu/warfile/
+                        cp /tmp/jenkinsdir/workspace/AnsibleKubernetes/target/ABCtechnologies-1.0.war .
                     '''
                     // Create Dockerfile
                     writeFile file: '/home/ubuntu/warfile/Dockerfile', text: '''
