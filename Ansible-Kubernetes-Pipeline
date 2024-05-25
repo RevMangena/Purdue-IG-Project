@@ -8,6 +8,17 @@ pipeline {
     }
 
     stages {
+        stage('Cleanup') {
+            steps {
+                sh '''
+                    docker system prune -a -f
+                    sudo apt-get clean
+                    sudo apt-get autoremove -y
+                '''
+            }
+        }
+
+    stages {
         stage('1. Compile') {
             steps {
                 sh 'mvn compile'
