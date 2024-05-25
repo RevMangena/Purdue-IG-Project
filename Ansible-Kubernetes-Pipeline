@@ -4,11 +4,10 @@ pipeline {
     environment {
         DOCKER_IMAGE_NAME = 'revmangena/my-tomcat-app'
         DOCKER_CREDENTIALS_ID = 'dockerhub-credentials' 
-        KUBECONFIG = '/home/ubuntu/.kube/.kube/config'
+        KUBECONFIG = '/home/ubuntu/.kube/config'
     }
 
     stages {
-
         stage('Cleanup') {
             steps {
                 sh '''
@@ -18,7 +17,6 @@ pipeline {
                 '''
             }
         }
-    }
 
         stage('1. Compile') {
             steps {
@@ -72,7 +70,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                        sh 'docker push ${DOCKER_IMAGE_NAME}'
+                    sh 'docker push ${DOCKER_IMAGE_NAME}'
                 }
             }
         }
@@ -91,7 +89,7 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        export KUBECONFIG=/home/ubuntu/.kube/config
+                        export KUBECONFIG=${KUBECONFIG}
                         ansible-playbook -i /etc/ansible/inventory -u ubuntu /etc/ansible/kubernetes_playbook.yml
                     '''
                 }
