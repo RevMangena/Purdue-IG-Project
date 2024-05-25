@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE_NAME = 'revmangena/my-tomcat-app'
-        DOCKER_CREDENTIALS_ID = 'dockerhub-credentials' // Ensure you have set this up in Jenkins
+        DOCKER_CREDENTIALS_ID = 'dockerhub-credentials' 
     }
 
     stages {
@@ -32,7 +32,8 @@ pipeline {
                     sh '''
                         rm -rf /home/ubuntu/warfile
                         mkdir -p /home/ubuntu/warfile
-                        cp target/ABCtechnologies-1.0.war /home/ubuntu/warfile/
+                        cd warfile
+                        cp /tmp/jenkinsdir/workspace/AnsibleKubernetes/target/ABCtechnologies-1.0.war . /home/ubuntu/warfile/
                     '''
                     // Create Dockerfile
                     writeFile file: '/home/ubuntu/warfile/Dockerfile', text: '''
