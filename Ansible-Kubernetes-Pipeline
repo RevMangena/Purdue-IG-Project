@@ -4,6 +4,7 @@ pipeline {
     environment {
         DOCKER_IMAGE_NAME = 'revmangena/my-tomcat-app'
         DOCKER_CREDENTIALS_ID = 'dockerhub-credentials' 
+        KUBECONFIG = '/home/ubuntu/.kube/.kube/config'
     }
 
     stages {
