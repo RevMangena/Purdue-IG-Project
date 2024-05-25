@@ -79,6 +79,7 @@ pipeline {
             steps {
                 script {
                     sh '''
+                        export KUBECONFIG=/home/ubuntu/.kube/config
                         ansible-playbook -i /etc/ansible/inventory -u ubuntu /etc/ansible/kubernetes_playbook.yml
                     '''
                 }
