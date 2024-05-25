@@ -17,6 +17,7 @@ pipeline {
                 '''
             }
         }
+    }
 
     stages {
         stage('1. Compile') {
