@@ -1,0 +1,88 @@
+pipeline {
+    agent { label 'ansible-kubernetes' }
+
+    environment {
+        DOCKER_IMAGE_NAME = 'revmangena/my-tomcat-app'
+        DOCKER_CREDENTIALS_ID = 'dockerhub-credentials' // Ensure you have set this up in Jenkins
+    }
+
+    stages {
+        stage('1. Compile') {
+            steps {
+                sh 'mvn compile'
+            }
+        }
+
+        stage('2. Test') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+
+        stage('3. Package') {
+            steps {
+                sh 'mvn package'
+            }
+        }
+
+        stage('Create Dockerfile') {
+            steps {
+                script {
+                    // Prepare the Docker build context
+                    sh '''
+                        rm -rf /home/ubuntu/warfile
+                        mkdir -p /home/ubuntu/warfile
+                        cp target/ABCtechnologies-1.0.war /home/ubuntu/warfile/
+                    '''
+                    // Create Dockerfile
+                    writeFile file: '/home/ubuntu/warfile/Dockerfile', text: '''
+                        FROM tomcat:9.0.73-jdk8-corretto-al2
+                        COPY ABCtechnologies-1.0.war /usr/local/tomcat/webapps/
+                    '''
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh '''
+                        cd /home/ubuntu/warfile
+                        docker build -t my-tomcat-app .
+                        docker tag my-tomcat-app ${DOCKER_IMAGE_NAME}
+                    '''
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    docker.withRegistry('', DOCKER_CREDENTIALS_ID) {
+                        sh 'docker push ${DOCKER_IMAGE_NAME}'
+                    }
+                }
+            }
+        }
+
+        stage('Deploy as container') {
+            steps {
+                script {
+                    sh '''
+                        ansible-playbook -i /etc/ansible/inventory -u ubuntu /etc/ansible/docker_playbook.yml
+                    '''
+                }
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    sh '''
+                        ansible-playbook -i /etc/ansible/inventory -u ubuntu /etc/ansible/kubernetes_playbook.yml
+                    '''
+                }
+            }
+        }
+    }
+}
