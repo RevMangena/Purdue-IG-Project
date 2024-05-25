@@ -8,6 +8,7 @@ pipeline {
     }
 
     stages {
+
         stage('Cleanup') {
             steps {
                 sh '''
@@ -19,7 +20,6 @@ pipeline {
         }
     }
 
-    stages {
         stage('1. Compile') {
             steps {
                 sh 'mvn compile'
