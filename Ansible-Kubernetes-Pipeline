@@ -90,7 +90,8 @@ pipeline {
                 script {
                     sh '''
                         export KUBECONFIG=${KUBECONFIG}
-                        ansible-playbook -i /etc/ansible/inventory -u ubuntu /etc/ansible/kubernetes_playbook.yml
+                        kubectl create -f /home/ubuntu/IndustryAppDeployment.yml
+						kubectl create -f /home/ubuntu/IndustryAppService.yml
                     '''
                 }
             }
