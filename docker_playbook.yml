@@ -1,0 +1,66 @@
+- name: Deploy Docker Container
+  hosts: worker
+  become: true
+
+  tasks:
+    - name: Update apt and upgrade all packages
+      apt:
+        update_cache: yes
+        upgrade: dist
+
+    - name: Remove conflicting packages
+      apt:
+        name: "{{ item }}"
+        state: absent
+      with_items:
+        - containerd
+        - containerd.io
+
+    - name: Install dependencies
+      apt:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - software-properties-common
+
+    - name: Add Docker GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker repository
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+        state: present
+
+    - name: Update apt cache after adding Docker repo
+      apt:
+        update_cache: yes
+
+    - name: Ensure Docker is installed
+      apt:
+        name: docker-ce
+        state: present
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Pull Docker image
+      docker_image:
+        name: revmangena/my-tomcat-app
+        source: pull
+
+    - name: Deploy nginx Docker container
+      docker_container:
+        name: my_tomcat_app
+        image: revmangena/my-tomcat-app:latest
+        state: started
+        restart_policy: always
+        ports:
+          - "2400:8080"
