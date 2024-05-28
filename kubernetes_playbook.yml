@@ -1,0 +1,17 @@
+- hosts: master
+  become: true
+  tasks:
+
+    - name: Deploy Kubernetes Service
+      k8s:
+        state: present
+        namespace: default
+        src: /home/ubuntu/IndustryAppService.yml
+        kubeconfig: /home/ubuntu/.kube/config
+
+    - name: Deploy Kubernetes Deployment
+      k8s:
+        state: present
+        namespace: default
+        src: /home/ubuntu/IndustryAppDeployment.yml
+        kubeconfig: /home/ubuntu/.kube/config
